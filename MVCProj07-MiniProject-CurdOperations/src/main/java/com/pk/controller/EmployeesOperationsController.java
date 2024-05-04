@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pk.model.Employee;
 import com.pk.service.IEmployeeService;
@@ -27,6 +28,7 @@ public class EmployeesOperationsController
 		
 		@GetMapping("/report")
 		public String showReport(Map<String, Object> map) {
+			System.out.println("EmployeesOperationsController.showReport()");
 			//use service
 			List<Employee> list =service.showAllEmployees();
 			map.put("list", list);
@@ -39,13 +41,29 @@ public class EmployeesOperationsController
 				return "register_employee_form";
 		}
 		
+//		@PostMapping("/add_employee")
+//		public String processAddEmployeeSubmitForm(@ModelAttribute("emp") Employee emp,Map<String, Object> map) {
+//			String msg=service.registerEmployee(emp);
+//			List<Employee> list =service.showAllEmployees();
+//			map.put("msg", msg);
+//			map.put("list", list);
+//			return "show_report";
+//		}
+		
+//		@PostMapping("/add_employee")
+//		public String processAddEmployeeSubmitForm(@ModelAttribute("emp") Employee emp,Map<String, Object> map) {
+//			System.out.println("EmployeesOperationsController.processAddEmployeeSubmitForm()");
+//			String msg=service.registerEmployee(emp);
+//			map.put("msg", msg);
+//			return "redirect:report";
+//		}
+		
 		@PostMapping("/add_employee")
-		public String processAddEmployeeSubmitForm(@ModelAttribute("emp") Employee emp,Map<String, Object> map) {
+		public String processAddEmployeeSubmitForm(@ModelAttribute("emp") Employee emp,RedirectAttributes attrs) {
+			System.out.println("EmployeesOperationsController.processAddEmployeeSubmitForm()");
 			String msg=service.registerEmployee(emp);
-			List<Employee> list =service.showAllEmployees();
-			map.put("msg", msg);
-			map.put("list", list);
-			return "show_report";
+			attrs.addFlashAttribute("msg", msg);
+			return "redirect:report";
 		}
 		
 		@GetMapping("/edit_employee")
